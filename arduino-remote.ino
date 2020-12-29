@@ -4,6 +4,7 @@
  */
 
 #define PIN_COUNT 3
+#define BAUD 9600
 
 // Pins of connected output devices (presumably LEDs)
 uint8_t pins[PIN_COUNT];
@@ -17,7 +18,7 @@ void toggle(uint8_t pin_id) {
 }
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(BAUD);
   
   pins[0] = PIN4;
   pins[1] = PIN3;
@@ -25,14 +26,7 @@ void setup() {
 
   for (int i = 0; i < PIN_COUNT; i++) {
     pinMode(pins[i], OUTPUT);
-    toggle(i);
   }
-
-  delay(500);
-
-  toggle(0);
-  toggle(1);
-  toggle(2);
 }
 
 void loop() {
@@ -40,16 +34,21 @@ void loop() {
 
   while (Serial.available() > 0) {
     input = Serial.parseInt();
+    
+    // Debug
     Serial.print("Got: ");
     Serial.println(input);
-
-    // Device appears to receive a 0 following each input
-    // so we look for >1, subtract and mod for array index
+    
+    // Ignore 0s as these are returned upon timeout
+    // Instead we look for >1, subtract and mod to get array index
     if (input >= 1) {
       pin_id = (input - 1) % PIN_COUNT;
+      toggle(pin_id);
+
+      // Debug
+      delay(100);
       Serial.print("Set: ");
       Serial.println(pin_id);
-      toggle(pin_id);
     }
   }
 }
