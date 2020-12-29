@@ -1,6 +1,6 @@
 /*
  * Serial receiver controlling pins of an Arduino (built using Uno)
- * Copyright Daniel Mizrachi 2020 <mail@danmiz.net>
+ * Copyright (c) 2020 Daniel Mizrachi <mail@danmiz.net>
  */
 
 #define PIN_COUNT 3
