@@ -14,7 +14,7 @@ bool states[PIN_COUNT] = { false, false, false };
 // Toggles physical and cached state of given pin
 void toggle(uint8_t pin_id) {
   states[pin_id] = !states[pin_id];
-  digitalWrite(pins[pin_id], (uint8_t)states[pin_id]);
+  digitalWrite(pins[pin_id], states[pin_id]);
 }
 
 void setup() {
@@ -27,28 +27,18 @@ void setup() {
   for (int i = 0; i < PIN_COUNT; i++) {
     pinMode(pins[i], OUTPUT);
   }
+
+  // Confirm ready by sending one byte
+  Serial.print('a');
 }
 
 void loop() {
   int input, pin_id;
 
-  while (Serial.available() > 0) {
-    input = Serial.parseInt();
+  if (Serial.available() > 0) {
+    input = Serial.read();
     
-    // Debug
-    Serial.print("Got: ");
-    Serial.println(input);
-    
-    // Ignore 0s as these are returned upon timeout
-    // Instead we look for >1, subtract and mod to get array index
-    if (input >= 1) {
-      pin_id = (input - 1) % PIN_COUNT;
-      toggle(pin_id);
-
-      // Debug
-      delay(100);
-      Serial.print("Set: ");
-      Serial.println(pin_id);
-    }
+    pin_id = input % PIN_COUNT;
+    toggle(pin_id);
   }
 }
