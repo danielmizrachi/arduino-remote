@@ -4,11 +4,12 @@
  */
 
 // Number of pins connected
-#define PIN_COUNT 3
+#define PIN_COUNT 5
 #define BAUD 9600
 
 // Pins of connected output devices (presumably LEDs)
-uint8_t pins[PIN_COUNT] = { PIN4, PIN3, PIN2 };
+uint8_t pins[PIN_COUNT] = { PIN6, PIN5, PIN4, PIN3, PIN2 };
+
 // Cached states of pins to save digitalReads
 bool states[PIN_COUNT];
 
@@ -16,6 +17,7 @@ bool states[PIN_COUNT];
 void toggle(uint8_t pin_id) {
   states[pin_id] = !states[pin_id];
   digitalWrite(pins[pin_id], states[pin_id]);
+  Serial.write((uint8_t*)states, PIN_COUNT);
 }
 
 void setup() {
